@@ -12,10 +12,9 @@ def index(request):
 
 
 urlpatterns = [
-    path("auth-register/", views.SignUp.as_view()),
+    path("auth-register/", views.Register.as_view()),
 
-    path('auth-token/',
-         views.AccountsTokenObtainPairView.as_view(),
+    path('auth-token/', views.AccountsTokenObtainPairView.as_view(),
          name='token_obtain_pair'),
     path('auth-token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
