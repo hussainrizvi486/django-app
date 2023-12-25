@@ -49,4 +49,14 @@ class User(AbstractUser):
         return self.username
 
 
-
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address_title = models.CharField(max_length=200, null=True)
+    address_type = models.CharField(max_length=200, null=True)
+    country = models.CharField(max_length=200, null=True)
+    state = models.CharField(max_length=200, null=True)
+    city = models.CharField(max_length=200, null=True)
+    address_line_1 = models.CharField(max_length=200, null=True)
+    address_line_2 = models.CharField(max_length=200, null=True)
+    post_code = models.CharField(max_length=200, null=True)
+    street_no = models.CharField(max_length=200, null=True)
