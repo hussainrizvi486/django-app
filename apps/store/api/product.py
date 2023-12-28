@@ -1,11 +1,13 @@
-from rest_framework import viewsets
+from rest_framework.views import APIView
 from apps.store.models.product import Product
 from rest_framework.response import Response
 
 
-class ProductApi(viewsets.ViewSet):
-    def get_produts(self, request):
-        products = Product.objects.values()
+class ProductApi(APIView):
+    def get(self, request):
+        products = Product.objects.values(
+            "product_name","price", "cover_images", "category"
+        )
         return Response(status=200, data=products)
 
     def create_product(self, request):
@@ -31,3 +33,5 @@ class ProductApi(viewsets.ViewSet):
         )
         product.save()
         ...
+
+

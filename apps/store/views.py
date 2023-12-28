@@ -2,39 +2,61 @@ from django.shortcuts import render
 from rest_framework.views import APIView, Response
 from rest_framework import status
 import requests
-from apps.store.models.product import Product as ProductM
+from apps.store.models.product import Category, Product as ProductM
 
 # https://crm.paytusker.us/api/resource/Item%20Group?fields=[%22name%22,%20%22image%22]&limit=1000
 
 class Product(APIView):
     def get(self, request):
-        req = requests.get(f"""https://crm.paytusker.us/api/resource/Item?fields=[%22name%22,%20%22item_name%22,%20%22item_group%22,%20%22custom_website_price%22,%20%22custom_rating%22,%20%22image%22]&limit=9999""")
+        try:
+            req = requests.get("""https://crm.paytusker.us/api/resource/Item?fields=[%22name%22,%20%22item_name%22,%20%22item_group%22,%20%22custom_website_price%22,%20%22custom_rating%22,%20%22image%22]&limit=9999""")
 
-        if req:
-            data = req.json()
-            data = data.get("data")
-            print(type(data))
+            req.raise_for_status()
+
+            data = req.json().get("data", [])
             no_image_url = "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg"
-            products= ProductM.objects.all()
-            products.delete()
 
+            # ProductM.objects.all().delete()
             for row in data:
-                print(row)
-                {'name': 'WI-2023-12-00001', 'item_name': 'TEst Item', 'item_group': 'Cameras', 'custom_website_price': 130.0, 'custom_rating': 0.0, 'image': None}
                 img = no_image_url
                 if row.get("image"):
                     img = f'crm.paytusker.us{row.get("image")}'
                 
-                product = ProductM.objects.create(
-                    product_name = row.get("item_name"), 
-                    cover_images = img, 
-                    rating = row.get('custom_rating'),
-                    price = row.get('custom_website_price') 
-                    )
-                product.save()
+                ProductM.objects.create(
+                    product_name=row.get("item_name"), 
+                    cover_images=img, 
+                    rating=row.get('custom_rating'),
+                    price=row.get('custom_website_price') 
+                )
+            
                 
-            return Response({"status": data})
-        pass
+            products = ProductM.objects.all()
+            print(products)
+
+            return Response(status=200, data={"message": "Data imported successfully"})
+        except requests.exceptions.RequestException as e:
+            return Response(status=500, data={"error": f"Failed to fetch data from API: {e}"})
+        except Exception as e:
+            return Response(status=500, data={"error": f"An error occurred: {e}"})
+        
+
+
+
+class CreateCategory(APIView):
+    def get(self, request):
+        req = requests.get("https://crm.paytusker.us/api/resource/Item%20Group?fields=[%22name%22,%20%22image%22]&limit=1000")
+        data = req.json().get("data", [])
+        for row in data:
+            print(row)
+            Category.objects.create(
+                name=row.get("name"),
+                image=row.get("image"),
+            )
+
+
+        return Response(status=200, data={"message": "Data imported successfully"})
+
+
 
 
 # class Cart(APIView):

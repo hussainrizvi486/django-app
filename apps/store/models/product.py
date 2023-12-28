@@ -11,15 +11,15 @@ class Product(BaseModel):
     description = models.TextField(default="", null=True)
     stock = models.IntegerField(default=1)
     disabled = models.BooleanField(default=False, null=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     cover_images = models.CharField(max_length=10000, null=True)
     rating = models.IntegerField(null=True)
 
     def __str__(self) -> str:
         return self.product_name
 
-    def save(self, *args, **kwargs):
-        self.net_price = self.price
+    # def save(self, *args, **kwargs):
+    #     self.net_price = self.price
 
 class ProductImages(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
