@@ -4,9 +4,11 @@ from rest_framework import status
 import requests
 from apps.store.models.product import Product as ProductM
 
+# https://crm.paytusker.us/api/resource/Item%20Group?fields=[%22name%22,%20%22image%22]&limit=1000
+
 class Product(APIView):
     def get(self, request):
-        req = requests.get(f"""https://crm.paytusker.us/api/resource/Item?fields=[%22name%22,%20%22item_name%22,%20%22item_group%22,%20%22custom_website_price%22,%20%22custom_rating%22,%20%22image%22]&limit=200""")
+        req = requests.get(f"""https://crm.paytusker.us/api/resource/Item?fields=[%22name%22,%20%22item_name%22,%20%22item_group%22,%20%22custom_website_price%22,%20%22custom_rating%22,%20%22image%22]&limit=9999""")
 
         if req:
             data = req.json()
