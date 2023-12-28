@@ -15,11 +15,11 @@ class Product(BaseModel):
     cover_images = models.CharField(max_length=10000, null=True)
     rating = models.IntegerField(null=True)
 
-
     def __str__(self) -> str:
         return self.product_name
-    # def save(self):
-    #     self.net_price = self.price
+
+    def save(self, *args, **kwargs):
+        self.net_price = self.price
 
 class ProductImages(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
@@ -29,10 +29,5 @@ class ProductImages(BaseModel):
         return self.product.product_name
     
 
-class Discount(BaseModel):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    discount_percentage = models.DecimalField(decimal_places=2, max_digits=5)
-    start_date = models.DateField()
-    end_date = models.DateField()
 
     
