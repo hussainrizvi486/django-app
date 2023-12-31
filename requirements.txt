@@ -6,3 +6,5 @@ tzdata==2023.3
 django-cors-headers==4.0.0
 djangorestframework-simplejwt==5.3.1
 djangorestframework==3.14.0
+requests==2.31.0
+django-extensions==3.2.3
