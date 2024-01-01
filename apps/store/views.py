@@ -6,10 +6,13 @@ from apps.store.models.product import Category, Product as ProductM
 
 # https://crm.paytusker.us/api/resource/Item%20Group?fields=[%22name%22,%20%22image%22]&limit=1000
 
+
 class Product(APIView):
     def get(self, request):
         try:
-            req = requests.get("""https://crm.paytusker.us/api/resource/Item?fields=[%22name%22,%20%22item_name%22,%20%22item_group%22,%20%22custom_website_price%22,%20%22custom_rating%22,%20%22image%22]&limit=9999""")
+            req = requests.get(
+                """https://crm.paytusker.us/api/resource/Item?fields=[%22name%22,%20%22item_name%22,%20%22item_group%22,%20%22custom_website_price%22,%20%22custom_rating%22,%20%22image%22]&limit=9999"""
+            )
 
             req.raise_for_status()
 
@@ -21,30 +24,38 @@ class Product(APIView):
                 img = no_image_url
                 if row.get("image"):
                     img = f'crm.paytusker.us{row.get("image")}'
-                
+
                 ProductM.objects.create(
-                    product_name=row.get("item_name"), 
-                    cover_images=img, 
-                    rating=row.get('custom_rating'),
-                    price=row.get('custom_website_price') 
+                    product_name=row.get("item_name"),
+                    cover_images=img,
+                    rating=row.get("custom_rating"),
+                    price=row.get("custom_website_price"),
                 )
-            
-                
+
             products = ProductM.objects.all()
             print(products)
 
             return Response(status=200, data={"message": "Data imported successfully"})
         except requests.exceptions.RequestException as e:
-            return Response(status=500, data={"error": f"Failed to fetch data from API: {e}"})
+            return Response(
+                status=500, data={"error": f"Failed to fetch data from API: {e}"}
+            )
         except Exception as e:
             return Response(status=500, data={"error": f"An error occurred: {e}"})
-        
 
+
+class user(APIView):
+    def get(self, request):
+        
+        print(self.request.user)
+        return Response(self.request.user.username)
 
 
 class CreateCategory(APIView):
     def get(self, request):
-        req = requests.get("https://crm.paytusker.us/api/resource/Item%20Group?fields=[%22name%22,%20%22image%22]&limit=1000")
+        req = requests.get(
+            "https://crm.paytusker.us/api/resource/Item%20Group?fields=[%22name%22,%20%22image%22]&limit=1000"
+        )
         data = req.json().get("data", [])
         for row in data:
             print(row)
@@ -53,10 +64,7 @@ class CreateCategory(APIView):
                 image=row.get("image"),
             )
 
-
         return Response(status=200, data={"message": "Data imported successfully"})
-
-
 
 
 # class Cart(APIView):

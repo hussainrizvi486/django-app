@@ -60,3 +60,5 @@ class Address(models.Model):
     address_line_2 = models.CharField(max_length=200, null=True)
     post_code = models.CharField(max_length=200, null=True)
     street_no = models.CharField(max_length=200, null=True)
+
+

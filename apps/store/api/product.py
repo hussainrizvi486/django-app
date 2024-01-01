@@ -1,12 +1,24 @@
 from rest_framework.views import APIView
 from apps.store.models.product import Product
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+
+
+class ProductDetail(APIView):
+    def get(self, request, product_id):
+        data = {}
+        product = get_object_or_404(Product, id=product_id)
+        if product:
+
+            data = Product.objects.values().filter(id=product_id)
+
+        return Response(status=200, data=data)
 
 
 class ProductApi(APIView):
     def get(self, request):
         products = Product.objects.values(
-            "product_name","price", "cover_images", "category"
+         "id",  "product_name", "price", "cover_image", "category"
         )
         return Response(status=200, data=products)
 
@@ -33,5 +45,3 @@ class ProductApi(APIView):
         )
         product.save()
         ...
-
-

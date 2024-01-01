@@ -1,6 +1,8 @@
 from django.db import models
-from apps.accounts.models import User
-from .base import BaseModel
+from  .base import BaseModel
+
+
+
 
 
 class Category(BaseModel):
