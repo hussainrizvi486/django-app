@@ -1,13 +1,26 @@
 from django.contrib import admin
 
 # from .models import Product
-from apps.store.models.product import Product
+from apps.store.models.product import Product, ProductImages
 from apps.store.models.common import Discount, Category
 from apps.store.models.customer import Customer, Cart, CartItem
 from apps.store.models.order import Order, OrderItems
 
 
-admin.site.register(Product)
+class ProductImageInline(admin.TabularInline):
+    model = ProductImages
+
+
+class ProductAdmin(admin.ModelAdmin):
+    # model = Product
+    inlines = [
+        ProductImageInline,
+    ]
+    search_fields = ["product_name", "category", "price"]
+
+
+admin.site.register(Product, ProductAdmin)
+
 admin.site.register(Discount)
 admin.site.register(Category)
 
